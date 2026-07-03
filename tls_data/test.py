@@ -1,0 +1,1 @@
+#folder to store the registered data (after processing in Riegl RiSCAN PRO)
