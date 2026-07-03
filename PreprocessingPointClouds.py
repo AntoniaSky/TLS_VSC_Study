@@ -70,7 +70,7 @@ for square in square_list:
     dtype = o3d.core.float32
 
 
-    ############################## Create Folder Structure
+    ############################## Create Folder Structure (will be created if not already existing)
     # {square}_reg --> {square}_singlePos           # all individual scans 
     # {square}_reg --> {square}_mergedSinglePos     # all scan positions
     # {square}_reg --> {square}_merged_noClip       # merged cloud or quadrants (after mergiing, after downsampling, after normalization, .txt files for RandLaNet) # before cleaning in CloudCompare
@@ -78,7 +78,6 @@ for square in square_list:
     # {square}_reg --> {square}_FINAL               # final cleaned and processed cloud after manual cleaning in CloudCompare (naming convention for following scripts: {square}_square_DS5mm_FINAL.laz)
     
     
-
     # if not exist then create
     os.makedirs(f'{main_path}/{square}_singlePos', exist_ok=True) 
     os.makedirs(f'{main_path}/{square}_merged_singlePos', exist_ok=True)
@@ -87,18 +86,20 @@ for square in square_list:
 
     ############################## Run the individual scripts in order
     ############ Script 1: Process point cloud data
-        # Assumption Vertical scans have uneven ScanPositions and Horizontal even ones (Only true if no scans skipped)
-            # --> If not Vertical and Horizontal abwechselnd then manual csv needs to be provided    
-        # Assumption tiepoint scans are in seperate folders
+    # Assumption Vertical scans have uneven ScanPositions and Horizontal even ones (Only true if no scans skipped)
+        # --> If not Vertical and Horizontal abwechselnd then manual csv needs to be provided (name convention: {square}_manual.csv, check script for details)
+    # Assumption tiepoint scans are in seperate folders
+    # if you one to move the clouds to be cnetered aroudn the center of square add an offset file (check script for details)
+    # deviation and reflection filters are applied in this step (check script for details)
     import PointCloudPreprocessing_Methods.processingRegPC_noClip as processingRegPC_noClip
     manual_csv_path = f"{main_path}/{square}_manual.csv"
     if os.path.exists(manual_csv_path):
-        print(f"Manual CSV file found at: {manual_csv_path}. Using manual scan position corrections.")
+        print(f"Manual CSV file found at: {manual_csv_path}. Using manual scan position corrections.")  
         processingRegPC_noClip.prepare_raw_point_clouds(square=square, 
                                                     main_path_disk=main_path, # path to registered raw data # if not on the same disk as the script, then provide the path to the disk where the data is stored
                                                     main_path=main_path, 
                                                     overwrite=False,
-                                                    manual_csv_path=manual_csv_path
+                                                    manual_csv_path=manual_csv_path # use manual csv file for scan position 
                                                     )
     else:
         print(f"No manual CSV file found at: {manual_csv_path}. Using default scan position corrections.")
