@@ -34,3 +34,4 @@ Combined Script refering to indiviudal functions and calculates all VSC-Metrics 
 *Script StyleMaps.py* 
 Collection of Stylemaps and lists for labelling the squares and quadrants of the pointcloud for preprossing and visualization
 
+This rep was used for the Abstract submitted to EGU 2026: https://doi.org/10.5194/egusphere-egu26-19722
